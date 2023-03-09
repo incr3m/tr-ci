@@ -15,12 +15,12 @@ jobs:
         id: cache-primes
         uses: actions/cache@v3
         with:
-          path: prime-numbers/002.txt
-          key: test-key-02
+          path: test-completed/dummy.txt
+          key: test-complete-${{ steps.vars.outputs.sha_short }}
 
       - name: Generate Prime Numbers
         if: steps.cache-primes.outputs.cache-hit != 'true'
-        run: mkdir -p "prime-numbers" && touch "prime-numbers/002.txt"
+        run: mkdir -p "test-completed" && touch "test-completed/dummy.txt"
 
       - name: Use Prime Numbers
-        run: ls prime-numbers
+        run: ls test-completed
