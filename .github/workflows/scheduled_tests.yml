@@ -1,26 +1,62 @@
-name: Caching Primes
+name: Scheduled Lint Checks
 
 on:
-  schedule:
-    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: "Log level"
+        default: "warning"
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
 
 jobs:
-  build:
+  check-job:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Cache Primes
-        id: cache-primes
+      - name: Cached Test Check
+        id: cached-test-check
         uses: actions/cache@v3
         with:
-          path: test-completed/dummy.txt
-          key: test-complete-${{ steps.vars.outputs.sha_short }}
+          path: __dummy.txt
+          key: test-complete-lint-${{ steps.vars.outputs.sha_short }}
+      - uses: actions/setup-node@v3
+        if: steps.cached-test-check.outputs.cache-hit == 'false'
+        with:
+          node-version: 16
+          cache: "yarn"
 
-      - name: Generate Prime Numbers
-        if: steps.cache-primes.outputs.cache-hit != 'true'
-        run: mkdir -p "test-completed" && touch "test-completed/dummy.txt"
+      - if: steps.cached-test-check.outputs.cache-hit == 'false'
+        run: corepack enable # enable yarn
 
-      - name: Use Prime Numbers
-        run: ls test-completed
+      - name: Run Checks Lint
+        id: run-checks-lint
+        if: steps.cached-test-check.outputs.cache-hit == 'false'
+        run: echo "hey"
+
+      # - uses: bahmutov/npm-install@v1
+      # - name: Install dependencies
+      #   if: steps.cached-test-check.outputs.cache-hit == 'false'
+      #   run: yarn install
+
+      # - name: Run Checks Lint
+      #   id: run-checks-lint
+      #   if: steps.cached-test-check.outputs.cache-hit == 'false'
+      #   run: yarn lint
+      #   continue-on-error: true
+
+      - name: Alert on Failure
+        if: ${{ failure() }}
+        run: echo "Boom" # TODO: alert discord
+
+      - name: Alert on Failure2
+        if: ${{ failure() }}
+        run: echo "Boom2" # TODO: alert discord
+
+      - name: On Success, cache test hash
+        if: ${{ success() }}
+        run: touch "__dummy.txt"
