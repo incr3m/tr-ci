@@ -1,0 +1,8 @@
+{
+  "name": "tr-ci",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:incr3m/tr-ci.git",
+  "author": "Jim <ajcastelfaller@gmail.com>",
+  "license": "MIT"
+}
