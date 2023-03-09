@@ -2,7 +2,7 @@ name: Caching Primes
 
 on:
   schedule:
-    - cron: * * * * *
+    - cron: "*/2 * * * *"
 
 jobs:
   build:
