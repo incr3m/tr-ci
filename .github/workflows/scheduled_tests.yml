@@ -17,14 +17,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
       - name: Cached Test Check
         id: cached-test-check
         uses: actions/cache@v3
         with:
           path: __dummy.txt
-          key: test-complete-lint-${{ steps.vars.outputs.sha_short }}
-      - uses: actions/setup-node@v3
+          key: test-complete-lint-${{ github.sha }}
+
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        if: steps.cached-test-check.outputs.cache-hit == 'false'
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
         if: steps.cached-test-check.outputs.cache-hit == 'false'
         with:
           node-version: 16
