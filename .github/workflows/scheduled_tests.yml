@@ -26,31 +26,31 @@ jobs:
 
       - name: Checkout Repo
         uses: actions/checkout@v3
-        if: steps.cached-test-check.outputs.cache-hit == 'false'
+        if: steps.cached-test-check.outputs.cache-hit != 'true'
 
       - name: Setup Node
         uses: actions/setup-node@v3
-        if: steps.cached-test-check.outputs.cache-hit == 'false'
+        if: steps.cached-test-check.outputs.cache-hit != 'true'
         with:
           node-version: 16
           cache: "yarn"
 
-      - if: steps.cached-test-check.outputs.cache-hit == 'false'
+      - if: steps.cached-test-check.outputs.cache-hit != 'true'
         run: corepack enable # enable yarn
 
       - name: Run Checks Lint
         id: run-checks-lint
-        if: steps.cached-test-check.outputs.cache-hit == 'false'
+        if: steps.cached-test-check.outputs.cache-hit != 'true'
         run: echo "hey"
 
       # - uses: bahmutov/npm-install@v1
       # - name: Install dependencies
-      #   if: steps.cached-test-check.outputs.cache-hit == 'false'
+      #   if: steps.cached-test-check.outputs.cache-hit != 'true'
       #   run: yarn install
 
       # - name: Run Checks Lint
       #   id: run-checks-lint
-      #   if: steps.cached-test-check.outputs.cache-hit == 'false'
+      #   if: steps.cached-test-check.outputs.cache-hit != 'true'
       #   run: yarn lint
       #   continue-on-error: true
 
