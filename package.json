@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "git@github.com:incr3m/tr-ci.git",
   "author": "Jim <ajcastelfaller@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
 }
